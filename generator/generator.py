@@ -26,21 +26,33 @@ def main():
                 "Description": "Name of an existing EC2 KeyPair",
                 "Type": "AWS::EC2::KeyPair::KeyName"
             },
-            "License": {
-              "Description": "License model can be BYOL or HourlyPricing",
-              "Type": "String",
-              "Default": "HourlyPricing"
-            }
+            "VpcId": {
+                "Type": "AWS::EC2::VPC::Id",
+                "Description": "VpcId of your existing Virtual Private Cloud (VPC)",
+                "ConstraintDescription": "must be the VPC Id of an existing Virtual Private Cloud."
+            },
+            "CidrIpVPC": {
+                "Type": "AWS::EC2::VPCCidrBlock",
+                "Description": "CIDR Block for existing VPC. Traffic would be allowed from this only",
+                "ConstraintDescription": "must be the VPC Id of an existing Virtual Private Cloud."
+            },
+            "Region": {
+                "Type": "AWS::Region",
+                "Description": "Region where stack is being deployed",
+                #"ConstraintDescription": "must be a list of at least two existing subnets associated with at least two different availability zones. They should be residing in the selected Virtual Private Cloud."
+                "default": "us-west-2"
+            },
+
         },
         "Mappings": {},
         "Resources": {}
     }
 
     serverVersion = parameters['serverVersion']
-    syncGatewayVersion = parameters['syncGatewayVersion']
+    # syncGatewayVersion = parameters['syncGatewayVersion']
     cluster = parameters['cluster']
 
-    template['Mappings'] = dict(template['Mappings'].items() + generateMappings(serverVersion, syncGatewayVersion).items())
+    template['Mappings'] = dict(template['Mappings'].items() + generateMappings(serverVersion).items())
     template['Resources'] = dict(template['Resources'].items() + generateMiscResources().items())
     template['Resources'] = dict(template['Resources'].items() + generateCluster(cluster).items())
 
@@ -48,25 +60,25 @@ def main():
     file.write(json.dumps(template, sort_keys=True, indent=4, separators=(',', ': ')) + '\n')
     file.close()
 
-def generateMappings(serverVersion, syncGatewayVersion):
+def generateMappings(serverVersion):
     allMappings = {
         "CouchbaseServer": {
-            "4.6.4": {
-                "us-east-1": { "BYOL": "ami-63af9f19", "HourlyPricing": "ami-279faf5d" },
-                "us-east-2": { "BYOL": "ami-d17742b4", "HourlyPricing": "ami-f4704591" },
-                "us-west-1": { "BYOL": "ami-018d8061", "HourlyPricing": "ami-b88d80d8" },
-                "us-west-2": { "BYOL": "ami-eea11e96", "HourlyPricing": "ami-b99728c1" },
-                "ca-central-1": { "BYOL": "ami-4723a623", "HourlyPricing": "ami-492ca92d" },
-                "eu-central-1": { "BYOL": "ami-82079eed", "HourlyPricing": "ami-d63ca5b9" },
-                "eu-west-1": { "BYOL": "ami-1c88ef65", "HourlyPricing": "ami-fc99fe85" },
-                "eu-west-2": { "BYOL": "ami-12445e76", "HourlyPricing": "ami-cb455faf" },
-                "eu-west-3": { "BYOL": "ami-86d96ffb", "HourlyPricing": "ami-d3dd6bae" },
-                "ap-southeast-1": { "BYOL": "ami-6fed9513", "HourlyPricing": "ami-17ed956b" },
-                "ap-southeast-2": { "BYOL": "ami-3b0ef059", "HourlyPricing": "ami-c30ef0a1" },
-                "ap-south-1": { "BYOL": "ami-83b1e0ec", "HourlyPricing": "ami-c8b0e1a7" },
-                "ap-northeast-1": { "BYOL": "ami-1eea8778", "HourlyPricing": "ami-75e78a13" },
-                "ap-northeast-2": { "BYOL": "ami-b19330df", "HourlyPricing": "ami-888e2de6" },
-                "sa-east-1": { "BYOL": "ami-f4551998", "HourlyPricing": "ami-d3571bbf" }
+            "4.6.3": {
+                "us-east-1": "ami-9e87f2e4",
+                "us-east-2": "ami-9e87f2e4",
+                "us-west-1": "ami-9e87f2e4",
+                "us-west-2":  "ami-380dfa40",
+                "ca-central-1":  "ami-492ca92d",
+                "eu-central-1":  "ami-d63ca5b9",
+                "eu-west-1":  "ami-fc99fe85",
+                "eu-west-2":  "ami-cb455faf",
+                "eu-west-3":  "ami-d3dd6bae",
+                "ap-southeast-1": "ami-17ed956b",
+                "ap-southeast-2":  "ami-c30ef0a1",
+                "ap-south-1": "ami-c8b0e1a7",
+                "ap-northeast-1":  "ami-75e78a13",
+                "ap-northeast-2": "ami-888e2de6",
+                "sa-east-1":  "ami-d3571bbf"
             },
             "5.0.1": {
                 "us-east-1": { "BYOL": "ami-a693a3dc", "HourlyPricing": "ami-ef95a595" },
@@ -86,29 +98,29 @@ def generateMappings(serverVersion, syncGatewayVersion):
                 "sa-east-1": { "BYOL": "ami-995519f5", "HourlyPricing": "ami-f5551999" }
             }
         },
-        "CouchbaseSyncGateway": {
-            "1.5.1": {
-                "us-east-1": { "BYOL": "ami-8294a4f8", "HourlyPricing": "ami-6d93a317" },
-                "us-east-2": { "BYOL": "ami-0877426d", "HourlyPricing": "ami-0f75406a" },
-                "us-west-1": { "BYOL": "ami-288c8148", "HourlyPricing": "ami-76f2ff16" },
-                "us-west-2": { "BYOL": "ami-589c2320", "HourlyPricing": "ami-41a01f39" },
-                "ca-central-1": { "BYOL": "ami-ad20a5c9", "HourlyPricing": "ami-c22da8a6" },
-                "eu-central-1": { "BYOL": "ami-103aa37f", "HourlyPricing": "ami-d5069fba" },
-                "eu-west-1": { "BYOL": "ami-b696f1cf", "HourlyPricing": "ami-c293f4bb" },
-                "eu-west-2": { "BYOL": "ami-6c445e08", "HourlyPricing": "ami-11445e75" },
-                "eu-west-3": { "BYOL": "ami-c9d86eb4", "HourlyPricing": "ami-58c77125" },
-                "ap-southeast-1": { "BYOL": "ami-10eb936c", "HourlyPricing": "ami-a4ed95d8" },
-                "ap-southeast-2": { "BYOL": "ami-a610eec4", "HourlyPricing": "ami-2911ef4b" },
-                "ap-south-1": { "BYOL": "ami-898cdde6", "HourlyPricing": "ami-058cdd6a" },
-                "ap-northeast-1": { "BYOL": "ami-b9e588df", "HourlyPricing": "ami-b3e588d5" },
-                "ap-northeast-2": { "BYOL": "ami-38933056", "HourlyPricing": "ami-648c2f0a" },
-                "sa-east-1": { "BYOL": "ami-3654185a", "HourlyPricing": "ami-b95a16d5" }
-            }
-        }
+        # "CouchbaseSyncGateway": {
+        #     "1.5.1": {
+        #         "us-east-1": { "BYOL": "ami-8294a4f8", "HourlyPricing": "ami-6d93a317" },
+        #         "us-east-2": { "BYOL": "ami-0877426d", "HourlyPricing": "ami-0f75406a" },
+        #         "us-west-1": { "BYOL": "ami-288c8148", "HourlyPricing": "ami-76f2ff16" },
+        #         "us-west-2": { "BYOL": "ami-589c2320", "HourlyPricing": "ami-41a01f39" },
+        #         "ca-central-1": { "BYOL": "ami-ad20a5c9", "HourlyPricing": "ami-c22da8a6" },
+        #         "eu-central-1": { "BYOL": "ami-103aa37f", "HourlyPricing": "ami-d5069fba" },
+        #         "eu-west-1": { "BYOL": "ami-b696f1cf", "HourlyPricing": "ami-c293f4bb" },
+        #         "eu-west-2": { "BYOL": "ami-6c445e08", "HourlyPricing": "ami-11445e75" },
+        #         "eu-west-3": { "BYOL": "ami-c9d86eb4", "HourlyPricing": "ami-58c77125" },
+        #         "ap-southeast-1": { "BYOL": "ami-10eb936c", "HourlyPricing": "ami-a4ed95d8" },
+        #         "ap-southeast-2": { "BYOL": "ami-a610eec4", "HourlyPricing": "ami-2911ef4b" },
+        #         "ap-south-1": { "BYOL": "ami-898cdde6", "HourlyPricing": "ami-058cdd6a" },
+        #         "ap-northeast-1": { "BYOL": "ami-b9e588df", "HourlyPricing": "ami-b3e588d5" },
+        #         "ap-northeast-2": { "BYOL": "ami-38933056", "HourlyPricing": "ami-648c2f0a" },
+        #         "sa-east-1": { "BYOL": "ami-3654185a", "HourlyPricing": "ami-b95a16d5" }
+        #     }
+        # }
     }
     mappings = {
         "CouchbaseServer": allMappings["CouchbaseServer"][serverVersion],
-        "CouchbaseSyncGateway": allMappings["CouchbaseSyncGateway"][syncGatewayVersion]
+        # "CouchbaseSyncGateway": allMappings["CouchbaseSyncGateway"][syncGatewayVersion]
     }
     return mappings
 
@@ -151,15 +163,15 @@ def generateMiscResources():
             "Properties": {
                 "GroupDescription" : "Enable SSH and Couchbase Ports",
                 "SecurityGroupIngress": [
-                    { "IpProtocol": "tcp", "FromPort": 22, "ToPort": 22, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 4369, "ToPort": 4369, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 4984, "ToPort": 4985, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 8091, "ToPort": 8094, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 9100, "ToPort": 9105, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 9998, "ToPort": 9999, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 11207, "ToPort": 11215, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 18091, "ToPort": 18093, "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": 21100, "ToPort": 21299, "CidrIp": "0.0.0.0/0" }
+                    { "IpProtocol": "tcp", "FromPort": 22, "ToPort": 22, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 4369, "ToPort": 4369, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 4984, "ToPort": 4985, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 8091, "ToPort": 8094, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 9100, "ToPort": 9105, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 9998, "ToPort": 9999, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 11207, "ToPort": 11215, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 18091, "ToPort": 18093, "CidrIp": { "Ref": "CidrIpVPC" } },
+                    { "IpProtocol": "tcp", "FromPort": 21100, "ToPort": 21299, "CidrIp": { "Ref": "CidrIpVPC" } }
                 ]
             }
         }
@@ -194,7 +206,7 @@ def generateSyncGateway(group, rallyAutoScalingGroup):
                 "AvailabilityZones": { "Fn::GetAZs": "" },
                 "LaunchConfigurationName": { "Ref": groupName + "LaunchConfiguration" },
                 "MinSize": 0,
-                "MaxSize": 100,
+                "MaxSize": 30,
                 "DesiredCapacity": nodeCount
             }
         },
@@ -222,8 +234,8 @@ def generateSyncGateway(group, rallyAutoScalingGroup):
                             "stackName=", { "Ref": "AWS::StackName" }, "\n",
                             "baseURL=https://raw.githubusercontent.com/couchbase-partners/amazon-cloud-formation-couchbase/master/scripts/\n",
                             "wget ${baseURL}syncGateway.sh\n",
-                            "chmod +x *.sh\n",
-                            "./syncGateway.sh ${stackName}\n"
+                            "chmod +x *.sh\n"
+                            # "./syncGateway.sh ${stackName}\n"
                         ]]
                     }
                 }
@@ -268,10 +280,11 @@ def generateServer(group, rallyAutoScalingGroup):
         groupName + "AutoScalingGroup": {
             "Type": "AWS::AutoScaling::AutoScalingGroup",
             "Properties": {
-                "AvailabilityZones": { "Fn::GetAZs": "" },
+                "VpcId" : { "Ref" : "VPC" },
+                "AvailabilityZones": { "Fn::GetAZs": { "Ref" : "AWS::Region" }},
                 "LaunchConfigurationName": { "Ref": groupName + "LaunchConfiguration" },
                 "MinSize": 1,
-                "MaxSize": 100,
+                "MaxSize": 30,
                 "DesiredCapacity": nodeCount
             }
         },
