@@ -153,7 +153,7 @@ def generateMiscResources():
                             "Effect": "Allow",
                             "Action": [
                                 "ec2:CreateTags",
-                                "ec2:DescribeInstances",
+                                "ec2:Describe*",
                                 "autoscaling:DescribeAutoScalingGroups"
                             ],
                             "Resource": "*"
