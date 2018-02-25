@@ -31,18 +31,22 @@ def main():
                 "Description": "VpcId of your existing Virtual Private Cloud (VPC)",
                 "ConstraintDescription": "must be the VPC Id of an existing Virtual Private Cloud."
             },
+            "Subnets": {
+               "Type": "List<AWS::EC2::Subnet::Id>",
+               "Description": "The list of SubnetIds in your Virtual Private Cloud (VPC)",
+               "ConstraintDescription": "must be a list of at least two existing subnets associated with at least two different availability zones. They should be residing in the selected Virtual Private Cloud."
+            },
             "CidrIpVPC": {
-                "Type": "AWS::EC2::VPCCidrBlock",
+                "Type": "String",
                 "Description": "CIDR Block for existing VPC. Traffic would be allowed from this only",
                 "ConstraintDescription": "must be the VPC Id of an existing Virtual Private Cloud."
             },
-            "Region": {
-                "Type": "AWS::Region",
-                "Description": "Region where stack is being deployed",
-                #"ConstraintDescription": "must be a list of at least two existing subnets associated with at least two different availability zones. They should be residing in the selected Virtual Private Cloud."
-                "default": "us-west-2"
-            },
-
+            "License": {
+              "Description": "License model can be BYOL or HourlyPricing",
+              "Type": "String",
+              "Default": "BYOL",
+              "ConstraintDescription": "Select BYOL only for GLP as these are pre baked images"
+            }
         },
         "Mappings": {},
         "Resources": {}
@@ -64,21 +68,21 @@ def generateMappings(serverVersion):
     allMappings = {
         "CouchbaseServer": {
             "4.6.3": {
-                "us-east-1": "ami-9e87f2e4",
-                "us-east-2": "ami-9e87f2e4",
-                "us-west-1": "ami-9e87f2e4",
-                "us-west-2":  "ami-380dfa40",
-                "ca-central-1":  "ami-492ca92d",
-                "eu-central-1":  "ami-d63ca5b9",
-                "eu-west-1":  "ami-fc99fe85",
-                "eu-west-2":  "ami-cb455faf",
-                "eu-west-3":  "ami-d3dd6bae",
-                "ap-southeast-1": "ami-17ed956b",
-                "ap-southeast-2":  "ami-c30ef0a1",
-                "ap-south-1": "ami-c8b0e1a7",
-                "ap-northeast-1":  "ami-75e78a13",
-                "ap-northeast-2": "ami-888e2de6",
-                "sa-east-1":  "ami-d3571bbf"
+                "us-east-1": { "BYOL": "ami-a693a3dc", "HourlyPricing": "ami-ef95a595" },
+                "us-east-2": { "BYOL": "ami-d97441bc", "HourlyPricing": "ami-62764307" },
+                "us-west-1": { "BYOL": "ami-cf8c81af", "HourlyPricing": "ami-c08c81a0" },
+                "us-west-2": { "BYOL": "ami-380dfa40", "HourlyPricing": "ami-49a11e31" },
+                "ca-central-1": { "BYOL": "ami-9822a7fc", "HourlyPricing": "ami-2e22a74a" },
+                "eu-central-1": { "BYOL": "ami-8438a1eb", "HourlyPricing": "ami-9939a0f6" },
+                "eu-west-1": { "BYOL": "ami-078aed7e", "HourlyPricing": "ami-7797f00e" },
+                "eu-west-2": { "BYOL": "ami-dd455fb9", "HourlyPricing": "ami-be7b61da" },
+                "eu-west-3": { "BYOL": "ami-d5dd6ba8", "HourlyPricing": "ami-5bc77126" },
+                "ap-southeast-1": { "BYOL": "ami-33ec944f", "HourlyPricing": "ami-13eb936f" },
+                "ap-southeast-2": { "BYOL": "ami-8910eeeb", "HourlyPricing": "ami-ec11ef8e" },
+                "ap-south-1": { "BYOL": "aami-0d8ddc62", "HourlyPricing": "ami-5db1e032" },
+                "ap-northeast-1": { "BYOL": "ami-b0e489d6", "HourlyPricing": "ami-47e48921" },
+                "ap-northeast-2": { "BYOL": "ami-ec8d2e82", "HourlyPricing": "ami-e78c2f89" },
+                "sa-east-1": { "BYOL": "ami-995519f5", "HourlyPricing": "ami-f5551999" }
             },
             "5.0.1": {
                 "us-east-1": { "BYOL": "ami-a693a3dc", "HourlyPricing": "ami-ef95a595" },
@@ -98,25 +102,25 @@ def generateMappings(serverVersion):
                 "sa-east-1": { "BYOL": "ami-995519f5", "HourlyPricing": "ami-f5551999" }
             }
         },
-        # "CouchbaseSyncGateway": {
-        #     "1.5.1": {
-        #         "us-east-1": { "BYOL": "ami-8294a4f8", "HourlyPricing": "ami-6d93a317" },
-        #         "us-east-2": { "BYOL": "ami-0877426d", "HourlyPricing": "ami-0f75406a" },
-        #         "us-west-1": { "BYOL": "ami-288c8148", "HourlyPricing": "ami-76f2ff16" },
-        #         "us-west-2": { "BYOL": "ami-589c2320", "HourlyPricing": "ami-41a01f39" },
-        #         "ca-central-1": { "BYOL": "ami-ad20a5c9", "HourlyPricing": "ami-c22da8a6" },
-        #         "eu-central-1": { "BYOL": "ami-103aa37f", "HourlyPricing": "ami-d5069fba" },
-        #         "eu-west-1": { "BYOL": "ami-b696f1cf", "HourlyPricing": "ami-c293f4bb" },
-        #         "eu-west-2": { "BYOL": "ami-6c445e08", "HourlyPricing": "ami-11445e75" },
-        #         "eu-west-3": { "BYOL": "ami-c9d86eb4", "HourlyPricing": "ami-58c77125" },
-        #         "ap-southeast-1": { "BYOL": "ami-10eb936c", "HourlyPricing": "ami-a4ed95d8" },
-        #         "ap-southeast-2": { "BYOL": "ami-a610eec4", "HourlyPricing": "ami-2911ef4b" },
-        #         "ap-south-1": { "BYOL": "ami-898cdde6", "HourlyPricing": "ami-058cdd6a" },
-        #         "ap-northeast-1": { "BYOL": "ami-b9e588df", "HourlyPricing": "ami-b3e588d5" },
-        #         "ap-northeast-2": { "BYOL": "ami-38933056", "HourlyPricing": "ami-648c2f0a" },
-        #         "sa-east-1": { "BYOL": "ami-3654185a", "HourlyPricing": "ami-b95a16d5" }
-        #     }
-        # }
+        "CouchbaseSyncGateway": {
+            "1.5.1": {
+                "us-east-1": { "BYOL": "ami-8294a4f8", "HourlyPricing": "ami-6d93a317" },
+                "us-east-2": { "BYOL": "ami-0877426d", "HourlyPricing": "ami-0f75406a" },
+                "us-west-1": { "BYOL": "ami-288c8148", "HourlyPricing": "ami-76f2ff16" },
+                "us-west-2": { "BYOL": "ami-589c2320", "HourlyPricing": "ami-41a01f39" },
+                "ca-central-1": { "BYOL": "ami-ad20a5c9", "HourlyPricing": "ami-c22da8a6" },
+                "eu-central-1": { "BYOL": "ami-103aa37f", "HourlyPricing": "ami-d5069fba" },
+                "eu-west-1": { "BYOL": "ami-b696f1cf", "HourlyPricing": "ami-c293f4bb" },
+                "eu-west-2": { "BYOL": "ami-6c445e08", "HourlyPricing": "ami-11445e75" },
+                "eu-west-3": { "BYOL": "ami-c9d86eb4", "HourlyPricing": "ami-58c77125" },
+                "ap-southeast-1": { "BYOL": "ami-10eb936c", "HourlyPricing": "ami-a4ed95d8" },
+                "ap-southeast-2": { "BYOL": "ami-a610eec4", "HourlyPricing": "ami-2911ef4b" },
+                "ap-south-1": { "BYOL": "ami-898cdde6", "HourlyPricing": "ami-058cdd6a" },
+                "ap-northeast-1": { "BYOL": "ami-b9e588df", "HourlyPricing": "ami-b3e588d5" },
+                "ap-northeast-2": { "BYOL": "ami-38933056", "HourlyPricing": "ami-648c2f0a" },
+                "sa-east-1": { "BYOL": "ami-3654185a", "HourlyPricing": "ami-b95a16d5" }
+            }
+        }
     }
     mappings = {
         "CouchbaseServer": allMappings["CouchbaseServer"][serverVersion],
@@ -172,7 +176,10 @@ def generateMiscResources():
                     { "IpProtocol": "tcp", "FromPort": 11207, "ToPort": 11215, "CidrIp": { "Ref": "CidrIpVPC" } },
                     { "IpProtocol": "tcp", "FromPort": 18091, "ToPort": 18093, "CidrIp": { "Ref": "CidrIpVPC" } },
                     { "IpProtocol": "tcp", "FromPort": 21100, "ToPort": 21299, "CidrIp": { "Ref": "CidrIpVPC" } }
-                ]
+                ],
+                "VpcId": {
+                    "Ref": "VpcId"
+                }
             }
         }
     }
@@ -280,8 +287,9 @@ def generateServer(group, rallyAutoScalingGroup):
         groupName + "AutoScalingGroup": {
             "Type": "AWS::AutoScaling::AutoScalingGroup",
             "Properties": {
-                "VpcId" : { "Ref" : "VPC" },
-                "AvailabilityZones": { "Fn::GetAZs": { "Ref" : "AWS::Region" }},
+                # "VpcId" : { "Ref" : "vpcId" },
+                # "AvailabilityZones": { "Fn::GetAZs": { "Ref" : "AWS::Region" }},
+                "VPCZoneIdentifier": { "Ref": "Subnets" },
                 "LaunchConfigurationName": { "Ref": groupName + "LaunchConfiguration" },
                 "MinSize": 1,
                 "MaxSize": 30,
