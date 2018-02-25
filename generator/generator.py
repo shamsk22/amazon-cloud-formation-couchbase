@@ -267,7 +267,7 @@ def generateServer(group, rallyAutoScalingGroup):
         "#!/bin/bash\n",
         "echo 'Running startup script...'\n",
         "echo 'Install aws-cli...'\n"
-        "yum install -y aws-cli"
+        "yum install -y aws-cli \n"
         "adminUsername=", { "Ref": "Username" }, "\n",
         "adminPassword=", { "Ref": "Password" }, "\n",
         "services=" + servicesParameter + "\n",
@@ -303,6 +303,7 @@ def generateServer(group, rallyAutoScalingGroup):
             "Properties": {
                 "ImageId": { "Fn::FindInMap": [ "CouchbaseServer", { "Ref": "AWS::Region" }, { "Ref": "License" } ] },
                 "InstanceType": nodeType,
+                "AssociatePublicIpAddress": True,
                 "SecurityGroups": [ { "Ref": "CouchbaseSecurityGroup" } ],
                 "KeyName": { "Ref": "KeyName" },
                 "EbsOptimized": True,
