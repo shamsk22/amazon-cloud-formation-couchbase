@@ -266,6 +266,8 @@ def generateServer(group, rallyAutoScalingGroup):
     command = [
         "#!/bin/bash\n",
         "echo 'Running startup script...'\n",
+        "echo 'Install aws-cli...'\n"
+        "yum install -y aws-cli"
         "adminUsername=", { "Ref": "Username" }, "\n",
         "adminPassword=", { "Ref": "Password" }, "\n",
         "services=" + servicesParameter + "\n",
