@@ -33,7 +33,7 @@ def main():
             },
             "Subnets": {
                "Type": "List<AWS::EC2::Subnet::Id>",
-               "Description": "The list of SubnetIds in your Virtual Private Cloud (VPC)",
+               "Description": "The list of PRIVATE SubnetIds in your Virtual Private Cloud (VPC)",
                "ConstraintDescription": "must be a list of at least two existing subnets associated with at least two different availability zones. They should be residing in the selected Virtual Private Cloud."
             },
             "CidrIpVPC": {
@@ -88,7 +88,7 @@ def generateMappings(serverVersion):
                 "us-east-1": { "BYOL": "ami-a693a3dc", "HourlyPricing": "ami-ef95a595" },
                 "us-east-2": { "BYOL": "ami-d97441bc", "HourlyPricing": "ami-62764307" },
                 "us-west-1": { "BYOL": "ami-cf8c81af", "HourlyPricing": "ami-c08c81a0" },
-                "us-west-2": { "BYOL": "ami-269c235e", "HourlyPricing": "ami-49a11e31" },
+                "us-west-2": { "BYOL": "ami-603aa218", "HourlyPricing": "ami-49a11e31" },
                 "ca-central-1": { "BYOL": "ami-9822a7fc", "HourlyPricing": "ami-2e22a74a" },
                 "eu-central-1": { "BYOL": "ami-8438a1eb", "HourlyPricing": "ami-9939a0f6" },
                 "eu-west-1": { "BYOL": "ami-078aed7e", "HourlyPricing": "ami-7797f00e" },
@@ -154,6 +154,9 @@ def generateMiscResources():
                             "Action": [
                                 "ec2:CreateTags",
                                 "ec2:Describe*",
+                                "ec2:CreateTags",
+                                "ec2:DescribeInstances",
+                                "cloudwatch:PutMetricData",
                                 "autoscaling:DescribeAutoScalingGroups"
                             ],
                             "Resource": "*"
@@ -303,7 +306,7 @@ def generateServer(group, rallyAutoScalingGroup):
             "Properties": {
                 "ImageId": { "Fn::FindInMap": [ "CouchbaseServer", { "Ref": "AWS::Region" }, { "Ref": "License" } ] },
                 "InstanceType": nodeType,
-                "AssociatePublicIpAddress": True,
+                "AssociatePublicIpAddress": False,
                 "SecurityGroups": [ { "Ref": "CouchbaseSecurityGroup" } ],
                 "KeyName": { "Ref": "KeyName" },
                 "EbsOptimized": True,
