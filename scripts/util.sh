@@ -23,6 +23,8 @@ formatDataDisk ()
 
 getrallyPrivateDNS ()
 {
+  echo "In get private dns"
+  
   region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \
     | jq '.region'  \
     | sed 's/^"\(.*\)"$/\1/' )
@@ -68,5 +70,5 @@ getrallyPrivateDNS ()
     --instance-ids ${rallyInstanceID} \
     --output text)
 
-  echo ${rallyPrivateDNS}
+  echo rallyPrivateDNS \'${rallyPrivateDNS}\'
 }
