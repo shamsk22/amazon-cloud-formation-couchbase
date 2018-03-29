@@ -10,7 +10,7 @@ cluster:
   - group: query
     nodeCount: 1
     nodeType: m4.4xlarge
-    dataDiskSize: 20
+    dataDiskSize: 5
     services:
       - query
   - group: index
