@@ -21,7 +21,7 @@ else
   rallyAutoScalingGroup=$5
   echo "This node is not the rally point and not part of the autoscaling group that contains the rally point."
   echo rallyAutoScalingGroup \'$rallyAutoScalingGroup\'
-  getrallyPrivateDNS=`getrallyPrivateDNS ${rallyAutoScalingGroup}`
+  rallyPrivateDNS=`getrallyPrivateDNS ${rallyAutoScalingGroup}`
 fi
 
 region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document \
