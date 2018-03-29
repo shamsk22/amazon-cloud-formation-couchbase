@@ -1,4 +1,4 @@
-serverVersion: 4.6.3
+serverVersion: 5.0.1
 #syncGatewayVersion: 1.5.1
 cluster:
   - group: data
@@ -10,11 +10,11 @@ cluster:
   - group: query
     nodeCount: 1
     nodeType: m4.4xlarge
-    dataDiskSize: 100
+    dataDiskSize: 5
     services:
       - query
   - group: index
-    nodeCount: 1
+    nodeCount: 2
     nodeType: m4.4xlarge
     dataDiskSize: 100
     services:
