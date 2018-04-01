@@ -4,7 +4,7 @@ cluster:
   - group: group1
     nodeCount: 1
     nodeType: m4.4xlarge
-    dataDiskSize: 100
+    dataDiskSize: 200
     services:
       - data
       - query
