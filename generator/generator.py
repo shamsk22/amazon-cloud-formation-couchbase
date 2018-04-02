@@ -33,7 +33,7 @@ def main():
             },
             "Subnets": {
                "Type": "List<AWS::EC2::Subnet::Id>",
-               "Description": "The list of SubnetIds in your Virtual Private Cloud (VPC)",
+               "Description": "The list of PRIVATE SubnetIds in your Virtual Private Cloud (VPC)",
                "ConstraintDescription": "must be a list of at least two existing subnets associated with at least two different availability zones. They should be residing in the selected Virtual Private Cloud."
             },
             "CidrIpVPC": {
@@ -308,7 +308,7 @@ def generateServer(group, rallyAutoScalingGroup):
             "Properties": {
                 "ImageId": { "Fn::FindInMap": [ "CouchbaseServer", { "Ref": "AWS::Region" }, { "Ref": "License" } ] },
                 "InstanceType": nodeType,
-                "AssociatePublicIpAddress": True,
+                "AssociatePublicIpAddress": False,
                 "SecurityGroups": [ { "Ref": "CouchbaseSecurityGroup" } ],
                 "KeyName": { "Ref": "KeyName" },
                 "EbsOptimized": True,
