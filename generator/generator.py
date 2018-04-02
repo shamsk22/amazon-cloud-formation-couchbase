@@ -152,12 +152,14 @@ def generateMiscResources():
                         "Statement": [{
                             "Effect": "Allow",
                             "Action": [
-                                "ec2:CreateTags",
-                                "ec2:Describe*",
-                                "ec2:CreateTags",
-                                "ec2:DescribeInstances",
-                                "cloudwatch:PutMetricData",
-                                "autoscaling:DescribeAutoScalingGroups"
+                                    "ec2:CreateTags",
+                                    "ec2:Describe*",
+                                    "autoscaling:DescribeAutoScalingGroups",
+                                    "cloudwatch:PutMetricData",
+                                    "cloudwatch:GetMetricStatistics",
+                                    "cloudwatch:ListMetrics",
+                                    "ec2:DescribeTags",
+                                    "autoscaling:DescribeAutoScalingGroups"
                             ],
                             "Resource": "*"
                         }]
