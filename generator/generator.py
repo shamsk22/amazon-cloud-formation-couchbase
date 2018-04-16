@@ -156,6 +156,8 @@ def generateMiscResources():
                                     "ec2:Describe*",
                                     "autoscaling:DescribeAutoScalingGroups",
                                     "cloudwatch:PutMetricData",
+                                    "cloudwatch:PutDashboard",
+                                    "cloudwatch:PutMetricAlarm",
                                     "cloudwatch:GetMetricStatistics",
                                     "cloudwatch:ListMetrics",
                                     "ec2:DescribeTags",
