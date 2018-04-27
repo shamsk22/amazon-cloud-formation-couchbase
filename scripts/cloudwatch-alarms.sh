@@ -12,6 +12,12 @@
 # 4. Create Alarm on Memory utilization
 #============================================================================================================================
 # Get instance id and name tag
+
+echo "Running cloudwatch-alarms.sh"
+envVar=$1
+
+if [ "${envVar}" = "Pre-prod" ]
+ then
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 INSTANCE_NAME=$(ec2-describe-tags    --region      $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone  | sed -e "s/.$//")    --filter      resource-id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id) | head -1 | awk '{print $5}')
@@ -23,7 +29,7 @@ then
     echo "### IP address have to be presented in format X.X.X.X"
     exit 1
 fi
-
+fi
 # Trying auto-detect AWS region
 AWS_DEFAULT_REGION=$(curl -s --connect-timeout 2 http://169.254.169.254/latest/meta-data/placement/availability-zone | sed -e 's/\([1-9]\).$/\1/g')
 
