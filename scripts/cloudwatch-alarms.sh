@@ -40,21 +40,19 @@ AWS_DEFAULT_REGION=$(curl -s --connect-timeout 2 http://169.254.169.254/latest/m
 export AWS_DEFAULT_REGION
 export AWS_DEFAULT_OUTPUT="text"
 
-if [ "${INSTANCE_NAME}" = "None" ]
-then
-    echo "### Could not find instance with IP ${PRIVATE_IP}"
-    exit 1
-fi
-fi
+#if [ "${INSTANCE_NAME}" = "None" ]
+#then
+#    echo "### Could not find instance with IP ${PRIVATE_IP}"
+#    exit 1
+#fi
 
-echo "Using variable:"
+echo "Using the settings:"
 echo envVar \'$envVar\'
-
 # 1) Create high CPU usage metric
 ARN_OF_SNS_TOPIC="arn:aws:sns:us-west-2:953030164212:SNS"
 CPU_USAGE=70
 
-aws cloudwatch put-metric-alarm \
+aws cloudwatch put-metric-alarm ${DRYRUN}\
     --alarm-name "${INSTANCE_NAME}-cpu"\
     --alarm-description "Alarm when CPU exceeds ${CPU_USAGE}%"\
     --actions-enabled\
@@ -72,7 +70,7 @@ aws cloudwatch put-metric-alarm \
     --unit Percent
 
 # 2) Create status check metric
-aws cloudwatch put-metric-alarm \
+aws cloudwatch put-metric-alarm ${DRYRUN}\
     --alarm-name "${INSTANCE_NAME}-status"\
     --alarm-description "Alarm when statusCheck failed"\
     --actions-enabled\
@@ -88,9 +86,9 @@ aws cloudwatch put-metric-alarm \
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 1\
     --unit Count
-    
+
 # 3) Create Alarm to check disk utilization
-aws cloudwatch put-metric-alarm \
+aws cloudwatch put-metric-alarm ${DRYRUN}\
     --alarm-name "${INSTANCE_NAME}-Disk-Utl"\
     --alarm-description "Alarm when Disk usage exceed 85 percent"\
     --actions-enabled \
@@ -108,7 +106,8 @@ aws cloudwatch put-metric-alarm \
     --unit Percent
 # 4) Creat Alarm on Memory utilization
 
-aws cloudwatch put-metric-alarm \
+
+aws cloudwatch put-metric-alarm ${DRYRUN} \
     --alarm-name "${INSTANCE_NAME}-Mem-Utl"\
     --alarm-description "Alarm when Memory usage exceed 80 percent"\
     --actions-enabled \
@@ -124,3 +123,6 @@ aws cloudwatch put-metric-alarm \
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 1\
     --unit Percent
+else
+echo "$envVar does not require CloudWatch Alarms"
+fi
