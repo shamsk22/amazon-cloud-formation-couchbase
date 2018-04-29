@@ -46,13 +46,15 @@ then
     exit 1
 fi
 fi
-echo "Using the settings:"
+
+echo "Using variable:"
 echo envVar \'$envVar\'
+
 # 1) Create high CPU usage metric
 ARN_OF_SNS_TOPIC="arn:aws:sns:us-west-2:953030164212:SNS"
 CPU_USAGE=70
 
-aws cloudwatch put-metric-alarm ${DRYRUN}\
+aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_NAME}-cpu"\
     --alarm-description "Alarm when CPU exceeds ${CPU_USAGE}%"\
     --actions-enabled\
@@ -70,7 +72,7 @@ aws cloudwatch put-metric-alarm ${DRYRUN}\
     --unit Percent
 
 # 2) Create status check metric
-aws cloudwatch put-metric-alarm ${DRYRUN}\
+aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_NAME}-status"\
     --alarm-description "Alarm when statusCheck failed"\
     --actions-enabled\
@@ -86,9 +88,9 @@ aws cloudwatch put-metric-alarm ${DRYRUN}\
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 1\
     --unit Count
-
+    
 # 3) Create Alarm to check disk utilization
-aws cloudwatch put-metric-alarm ${DRYRUN}\
+aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_NAME}-Disk-Utl"\
     --alarm-description "Alarm when Disk usage exceed 85 percent"\
     --actions-enabled \
@@ -106,8 +108,7 @@ aws cloudwatch put-metric-alarm ${DRYRUN}\
     --unit Percent
 # 4) Creat Alarm on Memory utilization
 
-
-aws cloudwatch put-metric-alarm ${DRYRUN} \
+aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_NAME}-Mem-Utl"\
     --alarm-description "Alarm when Memory usage exceed 80 percent"\
     --actions-enabled \
