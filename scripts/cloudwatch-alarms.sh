@@ -46,6 +46,10 @@ then
     exit 1
 fi
 fi
+
+echo "Using variable:"
+echo envVar \'$envVar\'
+
 # 1) Create high CPU usage metric
 ARN_OF_SNS_TOPIC="arn:aws:sns:us-west-2:953030164212:SNS"
 CPU_USAGE=70
@@ -103,7 +107,6 @@ aws cloudwatch put-metric-alarm \
     --evaluation-periods 1\
     --unit Percent
 # 4) Creat Alarm on Memory utilization
-
 
 aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_NAME}-Mem-Utl"\
