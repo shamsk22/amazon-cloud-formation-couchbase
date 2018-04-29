@@ -29,7 +29,7 @@ echo "${PRIVATE_IP}" | grep -q -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,
 
 if [ $? -ne 0 ]
 then
-    echo "### Usage: $0 <IP-ADDRESS>"
+    echo "### Usage: $0 $PRIVATE_IP"
     echo "### IP address have to be presented in format X.X.X.X"
     exit 1
 fi
