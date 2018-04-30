@@ -20,11 +20,10 @@ then
 echo "waiting for tag completion..."
 sleep 10 
 # Get instance id and name tag
-export HOME=/root
-echo "setting-up aws cli env"
+
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
-INSTANCE_NAME=$(ec2-describe-tags --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone  | sed -e "s/.$//")    --filter      resource-id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id) | head -1 | awk '{print $5}')
+INSTANCE_NAME=$(/opt/aws/bin/ec2-describe-tags --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone  | sed -e "s/.$//")    --filter      resource-id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id) | head -1 | awk '{print $5}')
 
 echo "${PRIVATE_IP}" | grep -q -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
 
