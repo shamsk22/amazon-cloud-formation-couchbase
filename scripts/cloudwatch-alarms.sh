@@ -18,7 +18,7 @@ envVar=$1
 if [ "${envVar}" = "Pre-prod" ]
 then
 echo "waiting for tag completion..."
-sleep 120 
+sleep 10 
 # Get instance id and name tag
 
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
