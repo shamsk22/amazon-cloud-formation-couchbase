@@ -20,7 +20,6 @@ then
 echo "waiting for tag completion..."
 sleep 10 
 # Get instance id and name tag
-cd /usr/bin/aws
 export HOME=/root
 echo "setting-up aws cli env"
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
