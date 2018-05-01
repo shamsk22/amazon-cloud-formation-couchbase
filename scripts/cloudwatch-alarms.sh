@@ -17,8 +17,8 @@ envVar=$1
 
 if [ "${envVar}" = "Pre-prod" ]
 then
-echo "waiting for tag completion..."
-sleep 10 
+echo "Getting Instance ID and name tag..."
+
 # Get instance id and name tag
 export EC2_HOME=/opt/aws/apitools/ec2
 export JAVA_HOME=/usr/
@@ -102,7 +102,7 @@ aws cloudwatch put-metric-alarm \
     --statistic Maximum\
     --dimensions  Name=InstanceId,Value=${INSTANCE_ID}\
     --period 60\
-    --threshold 1\
+    --threshold 85\
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 1\
     --unit Percent
@@ -111,7 +111,7 @@ aws cloudwatch put-metric-alarm \
 
 aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Mem-Utl"\
-    --alarm-description "Alarm when Memory usage exceed 80 percent"\
+    --alarm-description "Alarm when Memory usage exceed 85 percent"\
     --actions-enabled \
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
@@ -121,7 +121,7 @@ aws cloudwatch put-metric-alarm \
     --statistic Maximum\
     --dimensions  Name=InstanceId,Value=${INSTANCE_ID}\
     --period 60\
-    --threshold 1\
+    --threshold 85\
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 1\
     --unit Percent
