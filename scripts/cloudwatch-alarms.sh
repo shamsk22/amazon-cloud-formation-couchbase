@@ -100,7 +100,7 @@ aws cloudwatch put-metric-alarm \
     --metric-name DiskSpaceUtilization\
     --namespace System/Linux \
     --statistic Maximum\
-    --dimensions  Name=InstanceId,Value=${INSTANCE_ID}\
+    --dimensions  Name=InstanceId,Value=${INSTANCE_ID} Name=MountPath,Value=/ Name=Filesystem,Value=/dev/xvda1\
     --period 60\
     --threshold 85\
     --comparison-operator GreaterThanOrEqualToThreshold\
