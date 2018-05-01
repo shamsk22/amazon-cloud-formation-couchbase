@@ -20,7 +20,7 @@ then
 echo "waiting for tag completion..."
 sleep 10 
 # Get instance id and name tag
-export EC2_HOME=/opt/aws/ec2-api-tools
+export EC2_HOME=/opt/aws/apitools/ec2
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 INSTANCE_NAME=$(/opt/aws/bin/ec2-describe-tags --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone  | sed -e "s/.$//")    --filter      resource-id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id) | head -1 | awk '{print $5}')
