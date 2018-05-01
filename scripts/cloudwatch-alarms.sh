@@ -126,7 +126,7 @@ aws cloudwatch put-metric-alarm \
     --evaluation-periods 1\
     --unit Percent
     
-echo "CloudWatch AlarmSetup completed"    
+echo "CloudWatch Alarm Setup completed on $envVar"    
 else
 echo "$envVar does not require CloudWatch Alarms"
 fi
