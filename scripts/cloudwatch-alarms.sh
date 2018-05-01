@@ -55,7 +55,7 @@ ARN_OF_SNS_TOPIC="arn:aws:sns:us-west-2:953030164212:SNS"
 CPU_USAGE=70
 
 aws cloudwatch put-metric-alarm \
-    --alarm-name "${INSTANCE_NAME}-cpu"\
+    --alarm-name "{INSTANCE_ID}-${INSTANCE_NAME}-cpu"\
     --alarm-description "Alarm when CPU exceeds ${CPU_USAGE}%"\
     --actions-enabled\
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
@@ -73,7 +73,7 @@ aws cloudwatch put-metric-alarm \
 
 # 2) Create status check metric
 aws cloudwatch put-metric-alarm \
-    --alarm-name "${INSTANCE_NAME}-status"\
+    --alarm-name "{INSTANCE_ID}-${INSTANCE_NAME}-status"\
     --alarm-description "Alarm when statusCheck failed"\
     --actions-enabled\
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
@@ -91,7 +91,7 @@ aws cloudwatch put-metric-alarm \
 
 # 3) Create Alarm to check disk utilization
 aws cloudwatch put-metric-alarm \
-    --alarm-name "${INSTANCE_NAME}-Disk-Utl"\
+    --alarm-name "{INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
     --alarm-description "Alarm when Disk usage exceed 85 percent"\
     --actions-enabled \
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
@@ -110,7 +110,7 @@ aws cloudwatch put-metric-alarm \
 
 
 aws cloudwatch put-metric-alarm \
-    --alarm-name "${INSTANCE_NAME}-Mem-Utl"\
+    --alarm-name "{INSTANCE_ID}-${INSTANCE_NAME}-Mem-Utl"\
     --alarm-description "Alarm when Memory usage exceed 80 percent"\
     --actions-enabled \
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
