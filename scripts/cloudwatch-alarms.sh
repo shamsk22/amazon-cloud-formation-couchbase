@@ -68,7 +68,7 @@ aws cloudwatch put-metric-alarm \
     --period 60\
     --threshold ${CPU_USAGE}\
     --comparison-operator GreaterThanThreshold\
-    --evaluation-periods 2\
+    --evaluation-periods 3\
     --unit Percent
 
 # 2) Create status check metric
@@ -86,7 +86,7 @@ aws cloudwatch put-metric-alarm \
     --period 60\
     --threshold 1\
     --comparison-operator GreaterThanOrEqualToThreshold\
-    --evaluation-periods 2\
+    --evaluation-periods 5\
     --unit Count
 
 # 3) Create Alarm to check disk utilization
@@ -104,7 +104,7 @@ aws cloudwatch put-metric-alarm \
     --period 60\
     --threshold 85\
     --comparison-operator GreaterThanOrEqualToThreshold\
-    --evaluation-periods 2\
+    --evaluation-periods 3\
     --unit Percent
 # 4) Creat Alarm on Memory utilization
 
@@ -123,7 +123,7 @@ aws cloudwatch put-metric-alarm \
     --period 60\
     --threshold 85\
     --comparison-operator GreaterThanOrEqualToThreshold\
-    --evaluation-periods 2\
+    --evaluation-periods 3\
     --unit Percent
     
 echo "CloudWatch Alarm Setup completed on $envVar"    
