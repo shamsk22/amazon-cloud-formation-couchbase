@@ -39,7 +39,15 @@ log() {
     echo "[$(date +"%Y-%m-%d"+"%T")]: $*"
 }
 
+# Function: Setup logfile and redirect stdout/stderr.
+log_setup() {
+    # Check if logfile exists and is writable.
+    ( [ -e "$logfile" ] || touch "$logfile" ) && [ ! -w "$logfile" ] && echo "ERROR: Cannot write to $logfile. Check permissions or sudo access." && exit 1
 
+    tmplog=$(tail -n $logfile_max_lines $logfile 2>/dev/null) && echo "${tmplog}" > $logfile
+    exec > >(tee -a $logfile)
+    exec 2>&1
+}
 
 # Function: Snapshot all volumes attached to this instance.
 snapshot_volumes() {
@@ -83,6 +91,7 @@ cleanup_snapshots() {
 	done
 } 
 
+log_setup
 
 # Grab all volume IDs attached to this instance
 volume_list=$(aws ec2 describe-volumes --region $region --filters Name=attachment.instance-id,Values=$instance_id --query Volumes[].VolumeId --output text)
