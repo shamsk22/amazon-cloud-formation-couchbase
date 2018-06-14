@@ -96,7 +96,7 @@ then
 echo "Running for c5 instance"
 aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
-    --alarm-description "Alarm when Disk usage exceed 85 percent"\
+    --alarm-description "Alarm when Disk usage exceed 80 percent"\
     --actions-enabled \
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
@@ -106,7 +106,7 @@ aws cloudwatch put-metric-alarm \
     --statistic Maximum\
     --dimensions  Name=InstanceId,Value=${INSTANCE_ID} Name=MountPath,Value=/mnt/datadisk Name=Filesystem,Value=/dev/nvme1n1\
     --period 60\
-    --threshold 85\
+    --threshold 80\
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 15\
     --unit Percent
@@ -114,7 +114,7 @@ else
 echo "Running for other then c5 instance"
 aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
-    --alarm-description "Alarm when Disk usage exceed 85 percent"\
+    --alarm-description "Alarm when Disk usage exceed 80 percent"\
     --actions-enabled \
     --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
@@ -124,7 +124,7 @@ aws cloudwatch put-metric-alarm \
     --statistic Maximum\
     --dimensions  Name=InstanceId,Value=${INSTANCE_ID} Name=MountPath,Value=/mnt/datadisk Name=Filesystem,Value=/dev/xvda1\
     --period 60\
-    --threshold 85\
+    --threshold 80\
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 15\
     --unit Percent
