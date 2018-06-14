@@ -90,6 +90,10 @@ aws cloudwatch put-metric-alarm \
     --unit Count
 
 # 3) Create Alarm to check disk utilization
+
+if [[ "$INSTANCE_TYPE" == "c5.4xlarge" ]]
+then
+echo "Running for c5 instance"
 aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
     --alarm-description "Alarm when Disk usage exceed 85 percent"\
@@ -100,12 +104,32 @@ aws cloudwatch put-metric-alarm \
     --metric-name DiskSpaceUtilization\
     --namespace System/Linux \
     --statistic Maximum\
-    --dimensions  Name=InstanceId,Value=${INSTANCE_ID} Name=MountPath,Value=/ Name=Filesystem,Value=/dev/xvda1\
+    --dimensions  Name=InstanceId,Value=${INSTANCE_ID} Name=MountPath,Value=/mnt/datadisk Name=Filesystem,Value=/dev/nvme1n1\
     --period 60\
     --threshold 85\
     --comparison-operator GreaterThanOrEqualToThreshold\
     --evaluation-periods 15\
     --unit Percent
+else
+echo "Running for other then c5 instance"
+aws cloudwatch put-metric-alarm \
+    --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
+    --alarm-description "Alarm when Disk usage exceed 85 percent"\
+    --actions-enabled \
+    --ok-actions "${ARN_OF_SNS_TOPIC}"\
+    --alarm-actions "${ARN_OF_SNS_TOPIC}"\
+    --insufficient-data-actions "${ARN_OF_SNS_TOPIC}"\
+    --metric-name DiskSpaceUtilization\
+    --namespace System/Linux \
+    --statistic Maximum\
+    --dimensions  Name=InstanceId,Value=${INSTANCE_ID} Name=MountPath,Value=/mnt/datadisk Name=Filesystem,Value=/dev/xvda1\
+    --period 60\
+    --threshold 85\
+    --comparison-operator GreaterThanOrEqualToThreshold\
+    --evaluation-periods 15\
+    --unit Percent
+fi
+        
 # 4) Creat Alarm on Memory utilization
 
 
