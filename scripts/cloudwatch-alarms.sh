@@ -58,9 +58,7 @@ aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-cpu"\
     --alarm-description "Alarm when CPU exceeds ${CPU_USAGE}%"\
     --actions-enabled\
-    --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
-    --insufficient-data-actions "${ARN_OF_SNS_TOPIC}"\
     --metric-name CPUUtilization\
     --namespace AWS/EC2\
     --statistic Average\
@@ -76,9 +74,7 @@ aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-status"\
     --alarm-description "Alarm when statusCheck failed"\
     --actions-enabled\
-    --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
-    --insufficient-data-actions "${ARN_OF_SNS_TOPIC}"\
     --metric-name StatusCheckFailed\
     --namespace AWS/EC2\
     --statistic Maximum\
@@ -98,9 +94,7 @@ aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
     --alarm-description "Alarm when Disk usage exceed 80 percent"\
     --actions-enabled \
-    --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
-    --insufficient-data-actions "${ARN_OF_SNS_TOPIC}"\
     --metric-name DiskSpaceUtilization\
     --namespace System/Linux \
     --statistic Maximum\
@@ -116,9 +110,7 @@ aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Disk-Utl"\
     --alarm-description "Alarm when Disk usage exceed 80 percent"\
     --actions-enabled \
-    --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
-    --insufficient-data-actions "${ARN_OF_SNS_TOPIC}"\
     --metric-name DiskSpaceUtilization\
     --namespace System/Linux \
     --statistic Maximum\
@@ -137,9 +129,7 @@ aws cloudwatch put-metric-alarm \
     --alarm-name "${INSTANCE_ID}-${INSTANCE_NAME}-Mem-Utl"\
     --alarm-description "Alarm when Memory usage exceed 85 percent"\
     --actions-enabled \
-    --ok-actions "${ARN_OF_SNS_TOPIC}"\
     --alarm-actions "${ARN_OF_SNS_TOPIC}"\
-    --insufficient-data-actions "${ARN_OF_SNS_TOPIC}"\
     --metric-name MemoryUtilization\
     --namespace System/Linux \
     --statistic Maximum\
